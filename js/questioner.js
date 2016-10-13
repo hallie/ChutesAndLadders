@@ -1,7 +1,11 @@
 /*global console */
 
+console.log(QUESTIONS);
+
 var timerId = "timer",
-    stopperId = "stopper";
+    stopperId = "stopper",
+	questionId = "question",
+	answerId = "answer";
 
 function Timer() {
 	'use strict';
@@ -34,4 +38,18 @@ function Timer() {
 	timer = setInterval(countDown, 1000);
 }
 
+
+function Question() {
+	'use strict';
+	var questionDiv = document.getElementById(questionId),
+		answerDiv = document.getElementById(answerId);
+	
+	this.setQuestion = function (questionInfo) {
+		questionDiv.textContent = questionInfo.question;
+		var choiceKeys = Object.keys(questionInfo.choices)
+		console.log(choiceKeys);
+	}
+}
+
 var timer = new Timer();
+new Question().setQuestion(QUESTIONS.L1[0]);

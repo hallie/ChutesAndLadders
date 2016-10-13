@@ -1,5 +1,5 @@
-{
-  "Q1": [
+var QUESTIONS = {
+  "L1": [
     {
       "question": "People with higher credit scores normally pay ____ in "
                 + "interest and fees than people with lower credit scores",
