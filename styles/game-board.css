@@ -1,0 +1,82 @@
+:root {
+    --lu-blue-dark: #3B495D;
+    --lu-blue-light: #5992DB;
+    --lu-green: #72A84F;
+    --lu-white: #FFFFFF;
+    --lu-black: #151515;
+    --lu-red: #CC3429;
+}
+
+html, body {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--lu-blue-dark);
+    font-family: MuseoSans-300;
+}
+
+#question-card {
+    position: absolute;
+    top: 10px;
+    height: 180px;
+    width: 700px;
+    background: var(--lu-white);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#question {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    height: 50px;
+    width: 680px;
+}
+
+#timer {
+    position: absolute;
+    left: 500px;
+    height: 50px;
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    color: var(--lu-red);
+}
+
+#submit {
+    position: absolute;
+    top: 100px;
+    left: 570px;
+    height: 50px;
+    width: 100px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--lu-blue-light);
+}
+
+#game-board {
+    position: absolute;
+    top: 220px;
+    height: 500px;
+    width: 700px;
+    background-color: var(--lu-blue-dark);
+}
+
+.game-block {
+    position: absolute;
+    height: 90px;
+    width: 130px;
+    border: 5px solid var(--lu-white);
+    border-radius: 5px;
+    background-color: var(--lu-green);
+}
+
+#player {
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    z-index: 999;
+    content: url('../imgs/sprite.jpg');
+}
