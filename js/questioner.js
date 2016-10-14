@@ -121,7 +121,7 @@ Game.prototype.buildQuestioner = function (questionsInfo) {
                     }
                 }
             }
-            player.move(movesToMake);
+            game.movePlayer(movesToMake);
             submitButton.textContent = 'Next Question';
         } else {
             game.nextQuestion();
