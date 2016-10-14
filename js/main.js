@@ -1,9 +1,9 @@
 var LEVEL1 = [
-        [ '-', '-', '-', '-', '-' ],
-        [ '-', ' ', ' ', ' ', ' ' ],
-        [ '-', '-', '-', '-', '-' ],
-        [ ' ', ' ', ' ', ' ', '-' ],
-        [ '-', '-', '-', '-', '-' ]
+        [ '--', '--', 'lt', '--', '--' ],
+        [ '--', '  ', 'lm', '  ', '  ' ],
+        [ '--', '--', 'lb', '--', '--' ],
+        [ '  ', '  ', '  ', '  ', '--' ],
+        [ '--', '--', '--', '--', '--' ]
     ],
     LEVEL_INFO = {
         questions: QUESTIONS.L1,
@@ -15,3 +15,4 @@ game.buildQuestioner(LEVEL_INFO.questions);
 game.nextQuestion();
 game.buildBoard(LEVEL_INFO.board);
 game.initializePlayer();
+//game.movePlayer(16);

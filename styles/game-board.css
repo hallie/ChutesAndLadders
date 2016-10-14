@@ -64,6 +64,49 @@ html, body {
     background-color: var(--lu-blue-dark);
 }
 
+.block-ladder {
+    position: relative;
+    height: 100px;
+    width: 80px;
+    background-color: burlywood;
+}
+
+.hole1 {
+    position: relative;
+    height: 15px;
+    width: 40px;
+    top: 0px;
+    left: 20px;
+}
+
+.hole2 {
+    position: relative;
+    height: 30px;
+    width: 40px;
+    top: 20px;
+    left: 20px;
+}
+
+.hole3 {
+    position: relative;
+    height: 15px;
+    width: 40px;
+    top: 40px;
+    left: 20px;
+}
+
+.block-ladder .hole1 {
+    background-color: var(--lu-green);
+}
+
+.block-ladder .hole2 {
+    background-color: var(--lu-green);
+}
+
+.block-ladder .hole3 {
+    background-color: var(--lu-green);
+}
+
 .game-block {
     position: absolute;
     height: 90px;
@@ -71,6 +114,23 @@ html, body {
     border: 5px solid var(--lu-white);
     border-radius: 5px;
     background-color: var(--lu-green);
+}
+
+.space-ladder {
+    border: none;
+    background-color: var(--lu-blue-dark);
+}
+
+.space-ladder .hole1 {
+    background-color: var(--lu-blue-dark);
+}
+
+.space-ladder .hole2 {
+    background-color: var(--lu-blue-dark);
+}
+
+.space-ladder .hole3 {
+    background-color: var(--lu-blue-dark);
 }
 
 #player {

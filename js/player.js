@@ -2,7 +2,7 @@ function Player() {
 	var height = 60,
 		width = 60,
 		id = 'player',
-		div;
+		div, path, direction;
     function createDiv() {
         var playerDiv = document.createElement('div');
         playerDiv.setAttribute('id', id);
@@ -14,14 +14,16 @@ function Player() {
     this.div = createDiv();
 	this.height = height;
 	this.width = width;
-	
-	this.moveBlock = function(direction) {
+    
+    this.move = function(direction) {
 		var player = document.getElementById(id),
 			top = parseInt(player.style.top.slice(0, -2)),
-			left = parseInt(player.style.left.slice(0, -2)),
-			timeout, mover,
-			interval = 100, moveDistance = 5;
+			left = parseInt(player.style.left.slice(0, -2)), mover,
+			interval = 100, moveDistance = 5,
+			timeout = (BLOCK_WIDTH / moveDistance) * interval;
+        console.log(top);
 		function moveUp() {
+            console.log(top);
 			top = top - moveDistance;
 			player.style.top = top + "px";
 		}
@@ -36,26 +38,46 @@ function Player() {
 		function moveRight() {
 			left = left + moveDistance;
 			player.style.left = left + "px";
-			console.log(left);
 		}
-		if (direction === 'left' || direction === 'right') {
-			timeout = (BLOCK_WIDTH / moveDistance) * interval;
-			if (direction === 'left') {
-				mover = setInterval(moveLeft, interval);
-			} else {
-				mover = setInterval(moveRight, interval);
-			}
-		} else {
-			timeout = (BLOCK_HEIGHT / moveDistance) * interval;
-			if (direction === 'up') {
-				mover = setInterval(moveUp, interval);
-			} else {
-				mover = setInterval(moveDown, interval);
-			}
-		}
-		setTimeout(function() {
-			clearInterval(mover);
-		}, timeout);
+        if (direction != 'ladder') {
+            if (direction === 'left' || direction === 'right') {
+                timeout = (BLOCK_WIDTH / moveDistance) * interval;
+                if (direction === 'left') {
+                    mover = setInterval(moveLeft, interval);
+                } else {
+                    mover = setInterval(moveRight, interval);
+                }
+            } else {
+                timeout = (BLOCK_HEIGHT / moveDistance) * interval;
+                if (direction === 'up') {
+                    mover = setInterval(moveUp, interval);
+                } else {
+                    mover = setInterval(moveDown, interval);
+                }
+            }
+        } else {
+            timeout = (BLOCK_HEIGHT / moveDistance) * interval * 2;
+            mover = setInterval(moveUp, interval);
+        }
+        setTimeout(function() {
+            clearInterval(mover);
+        }, timeout);
+    }
+    
+    this.slideDown = function () {
+        // Slides will always just go to the level immediately below
+        var g = 9.8,
+            totalFall = BLOCK_HEIGHT * 2,
+            totalTime = Math.sqrt(2 * totalFall / g) * 1000,
+            secondsPassed = 0,
+            distanceFallen = 0,
+            
+            player = document.getElementById(id),
+			top = parseInt(player.style.top.slice(0, -2)),
+			left = parseInt(player.style.left.slice(0, -2));
+        function calculateVelocity() {
+            //TODO
+        }
     }
 }
 
@@ -68,10 +90,12 @@ Game.prototype.initializePlayer = function () {
     this.player = player;
     this.player.div.style.top = startingH + "px";
     this.player.div.style.left = startingW + "px";
-	this.player.position = (-1, 0);
+	this.player.position = {
+        x: this.board.getLayout().length - 1,
+        y: 0
+    };
 	this.player.direction = 'right';
     this.board.div.appendChild(this.player.div);
-    console.log(this.player.div);
 }
 
 Game.prototype.movePlayer = function (movesToMake) {
@@ -86,30 +110,82 @@ Game.prototype.movePlayer = function (movesToMake) {
 				y: -1
 			},
 			'up': {
-				x: -1,
+				x: 1,
 				y: 0
 			},
 			'down': {
-				x: 1,
+				x: -1,
 				y: 0
 			}
-		};
-	function getPath(moves, layout, direction) {
-		var path = [], steps = 0,
-			x = player.position[0],
-			y = player.position[1],
-			max_x = layout.length,
-			max_y = layout[0].length;
+		},
+        layout = this.board.getLayout(),
+        direction = this.player.direction,
+        path = [];
+    
+	function getPath(moves) {
+		var steps = 0,
+			x = player.position.x,
+			y = player.position.y,
+			max_x = layout.length - 1,
+			max_y = layout[0].length - 1;
 		while (steps < moves) {
-			path.append(direction);
+			path.push(direction);
 			var d_x = dirDir[direction].x,
 				d_y = dirDir[direction].y;
-			x += d_x;
-			y += dy;
+            x -= d_x;
+			y += d_y;
 			if (y === 0 || y === max_y) {
-				direction = 'up';
+                if (x > 0) {
+                    if (layout[x][y] != '--') {
+                        x -= 1;
+                        path.pop();
+                        direction = 'left';
+                    } else {
+                        direction = 'up';
+                    }
+                } else {
+                    direction = 'right';
+                }
 			}
-			
+			steps++;
 		}
-	}
+        console.log(x, y);
+        console.log(layout[x][y]);
+        if (layout[x][y] === 'lt') {
+            path.push('ladder');
+            x -= 2;
+        }
+        console.log(path);
+        return {
+            'x': x,
+            'y': y
+        };
+    }
+    pos = getPath(movesToMake);
+    this.player.direction = direction;
+    this.player.position = pos;
+    var p = 0;
+    console.log(path);
+    function doSetTimeout() {
+        var t = 2800;
+        d = path[p];
+        if (d === 'up' || d === 'down') {
+            t = 2000;
+        }
+        if (d === 'ladder') {
+            t = 4000;
+        }
+        var i = setInterval(player.move(d));
+        setTimeout(function() {
+            clearInterval(i);
+            callNext();
+        }, t);
+    }
+    function callNext() {
+        p++;
+        if (p < path.length) {
+            doSetTimeout();
+        }
+    }
+    doSetTimeout();
 }
