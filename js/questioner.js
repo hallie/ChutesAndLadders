@@ -116,12 +116,10 @@ Game.prototype.buildQuestioner = function (questionsInfo) {
                 if (choices[i].checked) {
                     if (choices[i].value === question.getCorrectAnswer()) {
                         movesToMake = timer.getTimeLeft();
-                    } else {
-                        movesToMake = timer.getTimeTaken() * -1;
+                        game.movePlayer(movesToMake);
                     }
                 }
             }
-            game.movePlayer(movesToMake);
             submitButton.textContent = 'Next Question';
         } else {
             game.nextQuestion();
