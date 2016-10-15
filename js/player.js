@@ -54,6 +54,9 @@ function Player() {
                 }
             }
         } else {
+            console.log(direction);
+            direction = (path[-1] === 'right') ? 'left' : 'right';
+            console.log(direction);
             timeout = (BLOCK_HEIGHT / moveDistance) * interval * 2;
             mover = setInterval(moveUp, interval);
         }
@@ -147,23 +150,31 @@ Game.prototype.movePlayer = function (movesToMake) {
 	function getPath(moves) {
 		var steps = 0,
 			x = player.position.x,
-			y = player.position.y;
+			y = player.position.y,
+			max_y = layout[0].length - 1;
 		while (steps < moves) {
-            direction = getDirection(x, y) || direction;
-            if (direction === -1) {
-                return {
-                    'x': x,
-                    'y': y
-                };
-            }
-            console.log(direction);
-            path.push(direction);
-            x += dirDir[direction].x;
-            y += dirDir[direction].y;
+            console.log(x, y, layout[x][y]);
+			path.push(direction);
+			var d_x = dirDir[direction].x,
+				d_y = dirDir[direction].y;
+            x -= d_x;
+			y += d_y;
+			if (y === 0 || y === max_y) {
+                if (x > 0) {
+                    if (layout[x-1][y] === '--') {
+                        direction = 'up';
+                    } else {
+                        direction = 'left';
+                    }
+                } else {
+                    direction = 'right';
+                }
+			}
 			steps++;
 		}
+        console.log(x, y);
+        console.log(layout[x][y]);
         if (layout[x][y] === 'lb') {
-            direction = (direction === 'right') ? 'left' : 'right';
             path.push('ladder');
             x -= getLadderLength(x, y);
         }
