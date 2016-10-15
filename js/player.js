@@ -21,7 +21,6 @@ function Player() {
 			left = parseInt(player.style.left.slice(0, -2)), mover,
 			interval = 100, moveDistance = 5,
 			timeout = (BLOCK_WIDTH / moveDistance) * interval;
-        console.log(top);
 		function moveUp() {
 			top = top - moveDistance;
 			player.style.top = top + "px";
@@ -112,17 +111,41 @@ Game.prototype.movePlayer = function (movesToMake) {
 				y: -1
 			},
 			'up': {
-				x: 1,
+				x: -1,
 				y: 0
 			},
 			'down': {
-				x: -1,
+				x: 1,
 				y: 0
 			}
 		},
         layout = this.board.getLayout(),
         direction = this.player.direction,
         path = [];
+    
+    function getDirection(x, y) {
+        var nextMove = layout[x][y][1];
+        switch (nextMove) {
+            case 's':
+                return 'right';
+            case 'r':
+                return 'right';
+            case 'l':
+                return 'left';
+            case 'u':
+                return 'up';
+            case 'f':
+                return -1;
+        }
+    }
+    
+    function getLadderLength(x, y) {
+        var l = 0;
+        while (layout[x-l][y] != 'lt') {
+            l += 1;
+        }
+        return l;
+    }
     
 	function getPath(moves) {
 		var steps = 0,
@@ -153,9 +176,8 @@ Game.prototype.movePlayer = function (movesToMake) {
         console.log(layout[x][y]);
         if (layout[x][y] === 'lb') {
             path.push('ladder');
-            x -= 2;
+            x -= getLadderLength(x, y);
         }
-        console.log(path);
         return {
             'x': x,
             'y': y
@@ -165,15 +187,14 @@ Game.prototype.movePlayer = function (movesToMake) {
     this.player.direction = direction;
     this.player.position = pos;
     var p = 0;
-    console.log(path);
     function doSetTimeout() {
-        var t = 2800;
+        var t = (BLOCK_WIDTH / 5) * 100;
         d = path[p];
         if (d === 'up' || d === 'down') {
-            t = 2000;
+            t = (BLOCK_HEIGHT / 5) * 100;
         }
         if (d === 'ladder') {
-            t = 4000;
+            t = (BLOCK_HEIGHT / 5) * 100 * 2;
         }
         var i = setInterval(player.move(d));
         setTimeout(function() {

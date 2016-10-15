@@ -43,7 +43,7 @@ function Gameboard() {
         
         for (x in levelLayout) {
             for (y in levelLayout[x]) {
-                if (levelLayout[x][y] === '--') {
+                if (levelLayout[x][y][0] === '-') {
                     addBlock(x, y);
                 } else if (levelLayout[x][y][0] === 'l') {
                     if (levelLayout[x][y] === 'lm') {
